@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PMRC Workshop — Connect an LLM</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main class="wrap">
+<h1>Using Generative AI in the PMRC Workshop</h1>
+<p>Find your institution below to see how to connect an LLM and use the workshop's R wrapper. If your institution adds nothing special, the Quick Start works for everyone.</p>
+<div class="callout"><section class="quickstart">
+<h2>Workshop Quick Start — do this to use the notebooks today</h2>
+<ol>
+<li>Get an API key from one provider:
+<ul class="providers">
+<li><a href="https://platform.openai.com/api-keys">OpenAI</a> <span class="cost">(free trial credit, then ~pennies/run)</span> — env var <code>OPENAI_API_KEY</code></li>
+<li><a href="https://console.anthropic.com/settings/keys">Anthropic Claude</a> <span class="cost">(free trial credit, then low pay-as-you-go)</span> — env var <code>ANTHROPIC_API_KEY</code></li>
+<li><a href="https://aistudio.google.com/apikey">Google Gemini (free tier)</a> <span class="cost">(standing free tier)</span> — env var <code>GEMINI_API_KEY</code></li>
+</ul></li>
+<li>Open the workshop Colab notebook your presenter shares at the session (the link is distributed live and changes each time):
+<ul>
+<li>LLMs for Image Annotation</li>
+<li>LLMs for Text Annotation</li>
+</ul></li>
+<li>In the notebook's <strong>onboarding cell</strong>, paste your key, set the provider, and run:
+<pre><code>source("https://raw.githubusercontent.com/mro0001/pmrc-genai-workshop/main/provider_wrapper.R")
+Sys.setenv(OPENAI_API_KEY = "sk-...")   # your key (use the env var for your provider)
+PROVIDER &lt;- "openai"; MODEL &lt;- "gpt-4o-mini"
+chat &lt;- new_chat(PROVIDER, model = MODEL)</code></pre></li>
+<li>Run the rest of the notebook — <code>new_chat()</code> handles the provider.</li>
+</ol>
+</section></div>
+<h2>Your institution</h2>
+<ul class="institution-list">
+<li><a href="institutions/arizona-state-university.html">Arizona State University</a> <span class="loc">Tempe, AZ</span></li>
+<li><a href="institutions/augusta-university.html">Augusta University</a> <span class="loc">Augusta, GA</span></li>
+<li><a href="institutions/beijing-academy-social-sciences.html">Beijing Academy of Social Sciences</a> <span class="loc">Beijing, China</span></li>
+<li><a href="institutions/city-university-of-hong-kong.html">City University of Hong Kong</a> <span class="loc">Hong Kong</span></li>
+<li><a href="institutions/george-mason-university.html">George Mason University</a> <span class="loc">Fairfax, VA</span></li>
+<li><a href="institutions/georgia-tech.html">Georgia Institute of Technology</a> <span class="loc">Atlanta, GA</span></li>
+<li><a href="institutions/georgia-state-university.html">Georgia State University</a> <span class="loc">Atlanta, GA</span></li>
+<li><a href="institutions/harvard-university.html">Harvard University</a> <span class="loc">Cambridge, MA</span></li>
+<li><a href="institutions/helmut-schmidt-university.html">Helmut Schmidt University</a> <span class="loc">Hamburg, Germany</span></li>
+<li><a href="institutions/jinan-university.html">Jinan University</a> <span class="loc">Guangzhou, China</span></li>
+<li><a href="institutions/kapsarc-school-of-public-policy.html">KAPSARC School of Public Policy</a> <span class="loc">Riyadh, Saudi Arabia</span></li>
+<li><a href="institutions/kobe-gakuin-university.html">Kobe Gakuin University</a> <span class="loc">Kobe, Japan</span></li>
+<li><a href="institutions/miami-university-ohio.html">Miami University (Ohio)</a> <span class="loc">Oxford, OH</span></li>
+<li><a href="institutions/nc-state.html">North Carolina State University</a> <span class="loc">Raleigh, NC</span></li>
+<li><a href="institutions/provincial-ombudsman.html">Provincial Ombudsman</a> <span class="loc">Pakistan (government office)</span></li>
+<li><a href="institutions/rutgers-university.html">Rutgers University</a> <span class="loc">New Brunswick, NJ</span></li>
+<li><a href="institutions/san-diego-state-university.html">San Diego State University</a> <span class="loc">San Diego, CA</span></li>
+<li><a href="institutions/syracuse-university.html">Syracuse University</a> <span class="loc">Syracuse, NY</span></li>
+<li><a href="institutions/university-of-baltimore.html">University of Baltimore</a> <span class="loc">Baltimore, MD</span></li>
+<li><a href="institutions/university-of-exeter.html">University of Exeter</a> <span class="loc">Exeter, UK</span></li>
+<li><a href="institutions/university-of-georgia.html">University of Georgia</a> <span class="loc">Athens, GA</span></li>
+<li><a href="institutions/umbc.html">University of Maryland, Baltimore County</a> <span class="loc">Baltimore County, MD</span></li>
+<li><a href="institutions/unc-chapel-hill.html">University of North Carolina at Chapel Hill</a> <span class="loc">Chapel Hill, NC</span></li>
+<li><a href="institutions/university-of-pennsylvania.html">University of Pennsylvania</a> <span class="loc">Philadelphia, PA</span></li>
+<li><a href="institutions/university-of-south-alabama.html">University of South Alabama</a> <span class="loc">Mobile, AL</span></li>
+<li><a href="institutions/ut-arlington.html">University of Texas at Arlington</a> <span class="loc">Arlington, TX</span></li>
+<li><a href="institutions/ut-dallas.html">University of Texas at Dallas</a> <span class="loc">Richardson, TX</span></li>
+<li><a href="institutions/university-of-utah.html">University of Utah</a> <span class="loc">Salt Lake City, UT</span></li>
+</ul>
+<p><a href="presenters.html">Presenter integration guide &rarr;</a></p>
+</main>
+</body>
+</html>

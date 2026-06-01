@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PMRC Workshop — Presenter Guide</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main class="wrap">
+<p><a href="index.html">&larr; Home</a></p>
+<h1>Presenter Integration Guide</h1>
+<h2>1. Host the wrapper</h2>
+<p>Put <code>provider_wrapper.R</code> in the public repo so notebooks can source it: <code>https://raw.githubusercontent.com/mro0001/pmrc-genai-workshop/main/provider_wrapper.R</code></p>
+<h2>2. Onboarding cell (top of each notebook)</h2>
+<pre><code>source("https://raw.githubusercontent.com/mro0001/pmrc-genai-workshop/main/provider_wrapper.R")
+Sys.setenv(OPENAI_API_KEY = "sk-...")   # participant pastes their key
+PROVIDER &lt;- "openai"; MODEL &lt;- "gpt-4o-mini"
+chat &lt;- new_chat(PROVIDER, model = MODEL)</code></pre>
+<h2>3. Constructor swap (both notebooks)</h2>
+<pre><code># BEFORE
+chat0 &lt;- chat_openai(model = "gpt-4o-mini")
+# AFTER
+chat0 &lt;- new_chat(PROVIDER, model = MODEL)</code></pre>
+<p>Apply to every <code>chat_openai(...)</code> call in the image-annotation notebook and the text-annotation notebook. Downstream <code>$chat()</code>, <code>$chat_structured()</code>, <code>content_image_file()</code>, and <code>type_*()</code> calls are unchanged.</p>
+<h2>4. Provider &rarr; default model</h2>
+<ul>
+<li><code>openai</code> &rarr; model <code>gpt-4o-mini</code></li>
+<li><code>claude</code> &rarr; model <code>NULL (ellmer default)</code></li>
+<li><code>gemini</code> &rarr; model <code>gemini-2.0-flash</code></li>
+</ul>
+<p>All three defaults are vision-capable, so the image notebook works on any of them. Text-only models cannot see images.</p>
+<h2>5. Security (required)</h2>
+<p>Remove the hard-coded <code>OPENAI_API_KEY</code> literal from the image-annotation notebook and <strong>rotate that key</strong> — treat it as leaked. Keys come from the onboarding cell only.</p>
+</main>
+</body>
+</html>

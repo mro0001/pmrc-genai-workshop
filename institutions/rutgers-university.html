@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rutgers University — Workshop GenAI Access</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<main class="wrap">
+<p><a href="../index.html">&larr; All institutions</a></p>
+<h1>Rutgers University</h1>
+<p class="loc">New Brunswick, NJ</p>
+<section class="quickstart">
+<h2>Workshop Quick Start — do this to use the notebooks today</h2>
+<ol>
+<li>Get an API key from one provider:
+<ul class="providers">
+<li><a href="https://platform.openai.com/api-keys">OpenAI</a> <span class="cost">(free trial credit, then ~pennies/run)</span> — env var <code>OPENAI_API_KEY</code></li>
+<li><a href="https://console.anthropic.com/settings/keys">Anthropic Claude</a> <span class="cost">(free trial credit, then low pay-as-you-go)</span> — env var <code>ANTHROPIC_API_KEY</code></li>
+<li><a href="https://aistudio.google.com/apikey">Google Gemini (free tier)</a> <span class="cost">(standing free tier)</span> — env var <code>GEMINI_API_KEY</code></li>
+</ul></li>
+<li>Open the workshop Colab notebook your presenter shares at the session (the link is distributed live and changes each time):
+<ul>
+<li>LLMs for Image Annotation</li>
+<li>LLMs for Text Annotation</li>
+</ul></li>
+<li>In the notebook's <strong>onboarding cell</strong>, paste your key, set the provider, and run:
+<pre><code>source("https://raw.githubusercontent.com/mro0001/pmrc-genai-workshop/main/provider_wrapper.R")
+Sys.setenv(OPENAI_API_KEY = "sk-...")   # your key (use the env var for your provider)
+PROVIDER &lt;- "openai"; MODEL &lt;- "gpt-4o-mini"
+chat &lt;- new_chat(PROVIDER, model = MODEL)</code></pre></li>
+<li>Run the rest of the notebook — <code>new_chat()</code> handles the provider.</li>
+</ol>
+</section>
+<section class="institutional"><h2>Your institution's own options</h2><p>Rutgers University provides chat tools (a login, not a developer key), so for the workshop use the Quick Start key above. For funded research, your PI can ask IT for an <strong>Azure OpenAI</strong> deployment, then use <code>new_chat("azure", ...)</code>.</p></section>
+<section class="data-note"><h2>Sensitive / IRB data</h2><p>Use public or de-identified data only in public LLMs; keep FERPA/IRB/PHI data out of public tools and the live Colab session.</p><p>For human-subjects or otherwise sensitive data, prefer a local model (<code>new_chat("ollama", ...)</code>) or your campus gateway — not a public API and not the live Colab session.</p></section>
+<section class="sources"><h2>Sources</h2><ul>
+<li><a href="https://it.rutgers.edu/ai/">Rutgers IT — AI</a></li>
+</ul></section>
+</main>
+</body>
+</html>
