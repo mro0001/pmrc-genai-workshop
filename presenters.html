@@ -10,19 +10,20 @@
 <main class="wrap">
 <p><a href="index.html">&larr; Home</a></p>
 <h1>Presenter Integration Guide</h1>
-<h2>1. Host the wrapper</h2>
-<p>Put <code>provider_wrapper.R</code> in the public repo so notebooks can source it: <code>https://raw.githubusercontent.com/mro0001/pmrc-genai-workshop/main/provider_wrapper.R</code></p>
-<h2>2. Onboarding cell (top of each notebook)</h2>
+<p>Both workshop notebooks are already wired to the wrapper. This page documents how it works, plus the one item that still needs a presenter.</p>
+<h2>1. The wrapper lives in the repo</h2>
+<p>The notebooks <code>source()</code> it from <code>https://raw.githubusercontent.com/mro0001/pmrc-genai-workshop/main/provider_wrapper.R</code>. Edit it there and every notebook picks up the change.</p>
+<h2>2. The Connect cell (top of each notebook)</h2>
+<p>One lean cell replaces the old multi-cell setup. A participant only sets <code>PROVIDER</code> and pastes a key. <code>set_api_key()</code> stores it under the right variable automatically, so switching providers is a one-word change.</p>
 <pre><code>source("https://raw.githubusercontent.com/mro0001/pmrc-genai-workshop/main/provider_wrapper.R")
-Sys.setenv(OPENAI_API_KEY = "sk-...")   # participant pastes their key
-PROVIDER &lt;- "openai"; MODEL &lt;- "gpt-4o-mini"
-chat &lt;- new_chat(PROVIDER, model = MODEL)</code></pre>
-<h2>3. Constructor swap (both notebooks)</h2>
-<pre><code># BEFORE
-chat0 &lt;- chat_openai(model = "gpt-4o-mini")
-# AFTER
-chat0 &lt;- new_chat(PROVIDER, model = MODEL)</code></pre>
-<p>Apply to every <code>chat_openai(...)</code> call in the image-annotation notebook and the text-annotation notebook. Downstream <code>$chat()</code>, <code>$chat_structured()</code>, <code>content_image_file()</code>, and <code>type_*()</code> calls are unchanged.</p>
+PROVIDER &lt;- "openai"     # "openai" | "claude" | "gemini"
+set_api_key(PROVIDER, "PASTE-YOUR-KEY-HERE")</code></pre>
+<p>The image notebook&rsquo;s Connect cell also sets <code>MODEL &lt;- "gpt-4o-mini"</code> (a vision model). The text notebook defers model choice to the 2&times;2 comparison near the end (<code>MODEL_A</code> / <code>MODEL_B</code>).</p>
+<h2>3. Constructor pattern</h2>
+<pre><code># was   chat0 &lt;- chat_openai(model = "gpt-4o-mini")
+# now   chat0 &lt;- new_chat(PROVIDER)                 # text notebook (default model)
+#       chat0 &lt;- new_chat(PROVIDER, model = MODEL)   # image notebook (pinned vision model)</code></pre>
+<p>Every <code>chat_openai(...)</code> call was swapped to <code>new_chat(PROVIDER, ...)</code>. Downstream <code>$chat()</code>, <code>$chat_structured()</code>, <code>content_image_file()</code>, and <code>type_*()</code> calls are unchanged. Pass <code>model=</code> only when you want a specific model.</p>
 <h2>4. Provider &rarr; default model</h2>
 <ul>
 <li><code>openai</code> &rarr; model <code>gpt-4o-mini</code></li>
@@ -30,8 +31,8 @@ chat0 &lt;- new_chat(PROVIDER, model = MODEL)</code></pre>
 <li><code>gemini</code> &rarr; model <code>gemini-2.0-flash</code></li>
 </ul>
 <p>All three defaults are vision-capable, so the image notebook works on any of them. Text-only models cannot see images.</p>
-<h2>5. Security (required)</h2>
-<p>Remove the hard-coded <code>OPENAI_API_KEY</code> literal from the image-annotation notebook and <strong>rotate that key</strong> — treat it as leaked. Keys come from the onboarding cell only.</p>
+<h2>5. Security (still needed)</h2>
+<p>The image-annotation notebook still holds the old hard-coded <code>OPENAI_API_KEY</code> in the API-key section just below the Connect cell. Delete that markdown cell, the hard-coded-key cell, and the <code>Sys.getenv</code> check (the Connect cell replaces all three), then <strong>rotate that key</strong> at platform.openai.com. Treat it as leaked.</p>
 </main>
 </body>
 </html>
