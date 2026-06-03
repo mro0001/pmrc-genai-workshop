@@ -42,6 +42,11 @@
       .reveal .matrix { border-collapse:collapse; margin:.3em auto; font-size:.62em; }
       .reveal .matrix td, .reveal .matrix th { border:1px solid var(--line); padding:.3em .7em; }
       .reveal .matrix th { background:#fafafa; }
+      .reveal table.exmatrix { border-collapse:collapse; margin:.25em auto; font-size:.42em; width:97%; }
+      .reveal table.exmatrix th, .reveal table.exmatrix td { border:1px solid var(--line); padding:.28em .45em; vertical-align:top; }
+      .reveal table.exmatrix th { background:#fafafa; text-align:left; }
+      .reveal table.exmatrix td.expl { text-align:left; }
+      .reveal table.exmatrix td.cat { font-weight:600; }
       .reveal .note { color: var(--muted); font-size:.66em; margin-top:.5em; }
       .reveal a.uc-colab { display:inline-block; margin-top:.6em; background:var(--accent); color:#111;
         font-weight:700; text-decoration:none; padding:.35em 1.1em; border-radius:999px; font-size:.62em; }
@@ -203,6 +208,19 @@ Twitter Bio: &lt;{text}&gt;</div>
           <p class="lead">Compliance · Accuracy · Precision</p>
         </section>
 
+        <!-- OUTPUT EXAMPLES (Table 1) -->
+        <section data-background-color="#ffffff">
+          <p class="uc-kicker">Three Model Comparison</p>
+          <h2>Output examples</h2>
+          <p class="note" style="margin:.15em 0 .3em;">Bio: <i>&ldquo;honored to serve as @bostonmayor &amp; member of @nationalmayors. dedicated to enhancing the well-being and prosperity of all Bostonians. proud to call this vibrant city home.&rdquo;</i> &nbsp;&middot;&nbsp; Gold standard: <b>Politicians/Government Accounts</b></p>
+          <table class="exmatrix">
+            <tr><th>Model</th><th>Predicted</th><th>Explanation</th></tr>
+            <tr><td class="cat">Qwen 3.6 (35B)</td><td class="cat">Politician or Government Account</td><td class="expl">The Twitter bio explicitly identifies the author as the Mayor of Boston (@bostonmayor) and a member of the National Mayors organization. This directly matches the definition of a Politician or Government Account, which includes elected officials like mayors who hold formal authority in policy-making and represent their city. The language focuses on public service and civic prosperity rather than corporate investment, news reporting, or personal citizen commentary, clearly distinguishing it from the other three categories.</td></tr>
+            <tr><td class="cat">GPT-OSS (120B)</td><td class="cat">Politician or Government Account</td><td class="expl">The bio explicitly states the user serves as @bostonmayor, indicating they hold the elected office of Mayor of Boston. This is a formal authority position in policy-making and city governance, matching the definition of a Politician or Government Account.</td></tr>
+            <tr><td class="cat">Gemma 4 (31B)</td><td class="cat">Politician or Government Account</td><td class="expl">The author explicitly states they serve as the '@bostonmayor' and are a member of the '@nationalmayors'. According to the definitions, elected officials such as mayors who hold formal authority in the policy-making process fall directly into the 'Politician or Government Account' category.</td></tr>
+          </table>
+        </section>
+
         <!-- COMPLIANCE code -->
         <section data-background-color="#ffffff">
           <p class="uc-kicker">1 · Compliance — the code</p>
@@ -266,6 +284,18 @@ accuracy_table &lt;- function(runs) runs |>
     .groups = "drop")</pre>
             </div>
           </div>
+        </section>
+
+        <!-- NON-MATCHING EXAMPLES (Table 3) -->
+        <section data-background-color="#ffffff">
+          <p class="uc-kicker">2 &middot; Accuracy</p>
+          <h2>Non-matching examples</h2>
+          <table class="exmatrix">
+            <tr><th>Model</th><th>Bio</th><th>Gold &rarr; Predicted</th><th>Explanation</th></tr>
+            <tr><td class="cat">Qwen 3.6 (35B)</td><td class="expl">former web journalist and conference coordinator.</td><td class="cat">General Public &rarr; Media</td><td class="expl">The Twitter bio explicitly identifies the author as a 'former web journalist,' which directly aligns with the Media category's definition of information-dissemination entities and individual reporters who report on, interpret, and frame topics for the public. While the author also mentions being a conference coordinator, the primary professional identifier (journalist) clearly places them within the Media category rather than Business Stakeholder, Politician/Government, or General Public.</td></tr>
+            <tr><td class="cat">GPT-OSS (120B)</td><td class="expl">currently - https://t.co/bcd4efghij. former city counc…</td><td class="cat">Politicians/Government Accounts &rarr; General Public</td><td class="expl">The bio indicates the user is a former city council member and a past employee of the mayor's office, but does not hold a current elected or government position, nor does it mention any business or media affiliation. As a private individual reflecting on past public service, the author fits the General Public category.</td></tr>
+            <tr><td class="cat">Gemma 4 (31B)</td><td class="expl">sharing insights on local business growth, tips &amp; tren…</td><td class="cat">General Public &rarr; Business Stakeholder</td><td class="expl">The author identifies as an accountant with a business degree and focuses on 'local business growth,' 'smallbiz,' and various commercial sectors like 'fintech' and 'cloudservices.' This aligns with the Business Stakeholder definition of private-sector actors who promote economic growth and investment, whereas they lack the official authority of a government account, the reporting focus of the media, or the typical profile of a general resident.</td></tr>
+          </table>
         </section>
 
         <!-- ACCURACY results -->
@@ -362,6 +392,20 @@ precision_table &lt;- function(runs) runs |>
     .groups = "drop")</pre>
             </div>
           </div>
+        </section>
+
+        <!-- IMPRECISE EXAMPLES (Table 4) -->
+        <section data-background-color="#ffffff">
+          <p class="uc-kicker">3 &middot; Precision</p>
+          <h2>Imprecise examples</h2>
+          <p class="note" style="margin:.1em 0 .25em;">Identical settings, run 5&times; &mdash; two runs that disagreed:</p>
+          <table class="exmatrix">
+            <tr><th>Model</th><th>Bio</th><th>Gold standard</th><th>Predicted</th><th>Why (1st sentence)</th></tr>
+            <tr><td class="cat" rowspan="2">GPT-OSS (120B)</td><td class="expl" rowspan="2">currently - https://t.co/bcd4efghij. former city counc…</td><td rowspan="2">Politicians/Government Accounts</td><td class="cat">General Public</td><td class="expl">The bio indicates the user is a former city council member and a past employee of the mayor's office, but does not hold a current elected or government position, nor does it mention any business or media affiliation.</td></tr>
+            <tr><td class="cat">Politician or Government Account</td><td class="expl">The bio highlights a past elected position ('former city council member') and experience working in the mayor's office, indicating a clear affiliation with government and policy‑making roles.</td></tr>
+            <tr><td class="cat" rowspan="2">Qwen 3.6 (35B)</td><td class="expl" rowspan="2">educator, innovator, and strategic leader bridging adv…</td><td rowspan="2">Other Stakeholders</td><td class="cat">General Public</td><td class="expl">The Twitter bio describes an individual professional focused on education, innovation, and technology, without any explicit references to corporate deal promotion, government authority, or media reporting.</td></tr>
+            <tr><td class="cat">Business Stakeholder</td><td class="expl">The bio employs professional, corporate-focused language ('strategic leader,' 'bridging advanced technology with diverse sectors,' 'cutting-edge solutions') that aligns with private-sector professionals, tech executives, or consultants.</td></tr>
+          </table>
         </section>
 
         <!-- PRECISION results -->
