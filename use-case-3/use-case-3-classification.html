@@ -17,7 +17,8 @@
       .reveal h3 { font-size: 1.05em; color: var(--muted); font-weight: 600; }
       .reveal .lead { font-size: 1.0em; color: var(--ink); max-width: 26em; margin: .2em auto; line-height: 1.45; }
       .reveal .left { text-align: left; }
-      .reveal ul.tight { display: inline-block; text-align: left; line-height: 1.5; font-size: .92em; }
+      .reveal ul.tight, .reveal ol.tight { display: inline-block; text-align: left; line-height: 1.5; font-size: .92em; }
+      .reveal ol.tight { padding-left: 1.4em; }
       .reveal .pill { display:inline-block; border:1px solid var(--line); border-radius:999px;
         padding:.12em .7em; margin:.18em; font-size:.62em; background:#fafafa; }
       .reveal .pill b { color: var(--accent); }
@@ -54,10 +55,23 @@
         <section data-background-color="#ffffff">
           <p class="uc-kicker">Workshop · Use Case 3</p>
           <h2>Multi-Category Classification</h2>
-          <p class="lead">Classifying <b>who is speaking</b> about a city's high-tech bid —
-            run on open models through MindRouter, then evaluated on the TaMPER floor.</p>
+          <p class="lead">A TaMPER example focusing on evaluation.</p>
           <p class="note">Compliance · Accuracy · Precision</p>
           <p><a class="uc-colab" href="https://colab.research.google.com/github/mro0001/pmrc-genai-workshop/blob/main/use-case-3/use_case_3_classification_R_colab.ipynb">&#9658;&nbsp; Open the R notebook in Colab</a></p>
+        </section>
+
+        <!-- 1b — GOALS -->
+        <section data-background-color="#ffffff">
+          <p class="uc-kicker">Overview</p>
+          <h2>Goals</h2>
+          <ol class="tight">
+            <li>Set up and run <b>multi-category classification</b> of Twitter bios.</li>
+            <li>Use <b>Compliance, Accuracy, and Precision</b> to evaluate the output.</li>
+            <li>3 different models</li>
+            <li>2 different prompts</li>
+            <li>2 different temperatures</li>
+            <li>Structured outputs vs no structured outputs</li>
+          </ol>
         </section>
 
         <!-- 2 — TASK -->
