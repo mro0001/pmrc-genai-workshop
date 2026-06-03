@@ -423,6 +423,17 @@ precision_table &lt;- function(runs) runs |>
             Gemma perfectly reproducible; GPT-OSS the most variable.</p>
         </section>
 
+        <!-- FULL vs SIMPLE example -->
+        <section data-background-color="#ffffff">
+          <p class="uc-kicker">Comparison &middot; Prompt</p>
+          <h2>Full vs simple prompt example</h2>
+          <table class="exmatrix">
+            <tr><th>Prompt</th><th>Bio</th><th>Gold standard</th><th>Predicted</th><th>Explanation</th></tr>
+            <tr><td class="cat">Full (reform)</td><td class="expl" rowspan="2">public relations strategist &amp; author of 'The Spin Room: A Guide to Crisis Management'</td><td rowspan="2">General Public</td><td class="cat">General Public &#10003;</td><td class="expl">The Twitter bio identifies the user as a public relations strategist and author, indicating a professional background but lacking explicit markers of corporate representation, government authority, or journalistic reporting. According to the provided definitions, the General Public category encompasses 'all remaining individual users who do not belong to the three organized groups above.' Since the bio does not demonstrate direct promotion of a specific economic deal, official government ties, or news dissemination, the author best fits the General Public category.</td></tr>
+            <tr><td class="cat">Simple (org)</td><td class="cat">Business Stakeholder &#10007;</td><td class="expl">The bio identifies the user as a public relations strategist and author of a business/crisis management guide, indicating a professional role focused on corporate communications and consulting rather than politics, journalism, or personal use.</td></tr>
+          </table>
+        </section>
+
         <!-- COMPARE · Prompt -->
         <section data-background-color="#ffffff">
           <p class="uc-kicker">Comparison · Prompt</p>
@@ -434,6 +445,19 @@ precision_table &lt;- function(runs) runs |>
           </table>
           <p class="note"><b>McNemar (accuracy): p = 0.002 — significant.</b> The full prompt is meaningfully more
             accurate (+11 pts) and more consistent. Qwen 3.6 · temp 0 · structured · 39 bios &times; 5.</p>
+        </section>
+
+        <!-- TEMPERATURE 0 vs 1 examples -->
+        <section data-background-color="#ffffff">
+          <p class="uc-kicker">Comparison &middot; Temperature</p>
+          <h2>Temperature 0 vs 1 examples</h2>
+          <table class="exmatrix">
+            <tr><th>Temperature</th><th>Bio</th><th>Gold standard</th><th>Predicted</th><th>Explanation</th></tr>
+            <tr><td class="cat" rowspan="2">0</td><td class="expl" rowspan="4">media consultant / communications expert. craft and execute press strategies for impactful media coverage. fmr tech news reporter &amp; PR lead for a leading financial analytics firm.</td><td rowspan="4">Media</td><td class="cat">Media &#10003;</td><td class="expl">The author's bio explicitly identifies them as a media consultant, communications expert, and former tech news reporter who crafts press strategies. This professional background in journalism, media relations, and press strategy aligns directly with the Media category, which encompasses individuals and entities focused on information dissemination, reporting, and communications. Unlike Business Stakeholders who actively promote specific economic deals for direct gain, or Politicians/Government Accounts who hold official policy-making roles, this profile centers on media strategy and journalistic experience, making Media the most accurate classification.</td></tr>
+            <tr><td class="cat">Media &#10003;</td><td class="expl">The author's bio explicitly identifies them as a 'media consultant,' 'communications expert,' and 'fmr tech news reporter,' which directly aligns with the Media category's focus on information dissemination, press coverage, and reporting. Their professional background centers on crafting press strategies and journalism, distinguishing them from direct business promoters, government officials, or general public commentators.</td></tr>
+            <tr><td class="cat" rowspan="2">1</td><td class="cat">Business Stakeholder &#10007;</td><td class="expl">The author identifies as a media consultant, communications expert, and PR lead for a financial analytics firm, with a focus on crafting press strategies for impactful coverage. This aligns with the Business Stakeholder category, which encompasses corporate representatives, spokespersons, and private-sector communications professionals who manage external relations and actively promote their organization's interests. Although the bio mentions being a former tech news reporter, their current primary role is corporate PR/communications rather than independent journalism, which distinguishes them from the Media category and places them firmly within the private-sector business stakeholder group.</td></tr>
+            <tr><td class="cat">Media &#10003;</td><td class="expl">The Twitter bio identifies the author as a 'media consultant,' 'communications expert,' and 'fmr tech news reporter' who specializes in crafting press strategies and securing media coverage. This background in journalism, public relations, and information dissemination aligns directly with the Media category, which explicitly includes reporters and information-dissemination entities. Unlike Business Stakeholders who actively promote specific economic deals or Politicians/Government accounts who engage in policy-making, this user's professional identity and stated expertise are centered on media relations and reporting, making Media the most accurate classification.</td></tr>
+          </table>
         </section>
 
         <!-- COMPARE · Temperature -->
