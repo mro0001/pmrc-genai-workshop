@@ -22,6 +22,9 @@
       .reveal .pill { display:inline-block; border:1px solid var(--line); border-radius:999px;
         padding:.12em .7em; margin:.18em; font-size:.62em; background:#fafafa; }
       .reveal .pill b { color: var(--accent); }
+      .reveal .cardlbl { display:inline-block; font-size:.5em; font-weight:700; letter-spacing:.08em;
+        text-transform:uppercase; color:#fff; background:var(--ink); border-radius:6px; padding:.2em .7em; margin:0 0 .35em; }
+      .reveal ol.tight ul { margin:.1em 0 .35em 0; list-style: disc; }
       .reveal .promptbox { text-align:left; background:#0f1117; color:#e9e9e9; border-radius:10px;
         padding:.8em 1em; font: 400 .42em/1.5 "SF Mono", ui-monospace, Menlo, Consolas, monospace;
         max-width: 92%; margin: .3em auto; white-space: pre-wrap; max-height: 62vh; overflow:auto; }
@@ -67,10 +70,14 @@
           <ol class="tight">
             <li>Set up and run <b>multi-category classification</b> of Twitter bios.</li>
             <li>Use <b>Compliance, Accuracy, and Precision</b> to evaluate the output.</li>
-            <li>3 different models</li>
-            <li>2 different prompts</li>
-            <li>2 different temperatures</li>
-            <li>Structured outputs vs no structured outputs</li>
+            <li>Use those metrics to <b>compare</b> across
+              <ul>
+                <li>3 different models</li>
+                <li>2 different prompts</li>
+                <li>2 different temperatures</li>
+                <li>Structured outputs vs no structured outputs</li>
+              </ul>
+            </li>
           </ol>
         </section>
 
@@ -92,28 +99,46 @@
           <p class="note">The bio, not the tweet, is the unit classified.</p>
         </section>
 
-        <!-- 3 — MODELS -->
+        <!-- 3 — MODELS / CONFIG -->
         <section data-background-color="#ffffff">
-          <p class="uc-kicker">Models</p>
+          <p class="uc-kicker">Setup</p>
           <h2>Three open models, two temperatures</h2>
-          <p style="margin:.3em 0;">
+          <div style="margin:.45em 0;">
+            <span class="cardlbl">Models</span><br/>
             <span class="pill"><b>Qwen 3.6 (35B)</b> · Alibaba</span>
             <span class="pill"><b>GPT-OSS (120B)</b> · OpenAI</span>
             <span class="pill"><b>Gemma 4 (31B)</b> · Google</span>
-          </p>
-          <p class="lead">Cross-<i>family</i> on purpose — benchmark scores don't predict <i>your</i> task,
-            so compare architectures, not variants of one.</p>
-          <p style="margin-top:.4em;">
+          </div>
+          <div style="margin:.45em 0;">
+            <span class="cardlbl">Hyperparameters</span><br/>
             <span class="pill">temperature <b>0</b> — deterministic</span>
             <span class="pill">temperature <b>1</b> — creative / variable</span>
-          </p>
-          <p class="note">All served on-premise through the MindRouter gateway (OpenAI-compatible API).</p>
+          </div>
+          <div style="margin:.45em 0;">
+            <span class="cardlbl">Structured output</span>
+            <div class="promptbox"><span class="k">JSON schema · Category + Explanation</span>
+
+{
+  "type": "object",
+  "properties": {
+    "Category": {
+      "type": "string",
+      "enum": [
+        "Business Stakeholder", "Politician or Government Account",
+        "Media", "General Public"
+      ]
+    },
+    "Explanation": { "type": "string" }
+  },
+  "required": ["Category", "Explanation"]
+}</div>
+          </div>
         </section>
 
         <!-- 4 — PROMPT (full) -->
         <section data-background-color="#ffffff">
-          <p class="uc-kicker">Prompt · detailed</p>
-          <h2>The full instrument</h2>
+          <p class="uc-kicker">Prompt · full</p>
+          <h2>Full prompt</h2>
           <div class="promptbox"><span class="k">Classification_prompt_reform  (verbatim from Workflow.ipynb)</span>
 
 Task Overview: You are going to classify the author of a given Twitter bio into one of 4 distinct categories, General Public, Business Stakeholder, Media, Politicians and Government Accounts and provide a brief explanation for your decision.
@@ -139,8 +164,8 @@ Output:
 
         <!-- 5 — PROMPT (simple) -->
         <section data-background-color="#ffffff">
-          <p class="uc-kicker">Prompt · stripped-down</p>
-          <h2>Same task, no scaffolding</h2>
+          <p class="uc-kicker">Prompt · simple</p>
+          <h2>Simple prompt</h2>
           <div class="promptbox"><span class="k">Classification_prompt_org  (verbatim from Workflow.ipynb)</span>
 
 I want you to perform a data annotation task. Your task is to carefully read the text and identify the category that best matches the Twitter Bio Description.
@@ -158,39 +183,27 @@ Twitter Bio: &lt;{text}&gt;</div>
           <p class="uc-kicker">Run it</p>
           <h2>The experimental design</h2>
           <ul class="tight">
-            <li><b>Repeat for precision:</b> classify every bio <b>5×</b> per model, across all three models
-              (single prompt per call).</li>
-            <li><b>Then pick one model</b> and run the whole batch once under each condition:</li>
+            <li>All unique, model, prompt, temperature, and structured outputs are run <b>5 times</b>.</li>
+            <li><b>Default settings for each comparison:</b> Model: Qwen 3.6, Prompt: Full prompt, Temperature: 0, Output: Structured.</li>
           </ul>
           <table class="matrix">
-            <tr><th>Temperature</th><th>Prompt</th><th>Output format</th></tr>
-            <tr><td>0</td><td>full</td><td>structured</td></tr>
-            <tr><td>1</td><td>simple</td><td>unstructured</td></tr>
+            <tr><th>Comparison</th><th>What changes</th></tr>
+            <tr><td>Models</td><td>Qwen 3.6 · GPT-OSS · Gemma 4</td></tr>
+            <tr><td>Prompt</td><td>Full · Simple</td></tr>
+            <tr><td>Temperature</td><td>0 · 1</td></tr>
+            <tr><td>Output</td><td>Structured · Unstructured</td></tr>
           </table>
-          <p class="note">2 temperatures × 2 prompts × 2 output formats = <b>8 conditions</b>, one full pass each.</p>
+          <p class="note">Each comparison changes one factor and holds the rest at the defaults above. Every condition is run 5&times;.</p>
         </section>
 
-        <!-- 7 — EVALUATION divider -->
+        <!-- 7 — THREE MODEL COMPARISON divider -->
         <section class="divider" data-background-color="#ffffff">
           <p class="uc-kicker">The evaluation suite</p>
-          <h2>Compliance · Accuracy · Precision</h2>
-          <p class="lead">A concept, then the Python and R that compute it — side by side.</p>
+          <h2>Three Model Comparison</h2>
+          <p class="lead">Compliance · Accuracy · Precision</p>
         </section>
 
-        <!-- 8 — COMPLIANCE concept -->
-        <section data-background-color="#ffffff">
-          <p class="uc-kicker">1 · Compliance</p>
-          <h2>Did it produce usable output?</h2>
-          <ul class="tight">
-            <li>The <b>operational gate</b>: is the output structurally conformant?</li>
-            <li>Two checks: <b>% missing</b> (blank fields) and <b>% correct type</b> (the label is one of the predefined categories).</li>
-            <li>Low compliance = a system-level problem, before accuracy even matters.</li>
-            <li>Structured output is the proactive fix — it <i>forces</i> a valid label.</li>
-          </ul>
-          <p class="note">This is where "structured vs unstructured" earns its place in the design.</p>
-        </section>
-
-        <!-- 9 — COMPLIANCE code -->
+        <!-- COMPLIANCE code -->
         <section data-background-color="#ffffff">
           <p class="uc-kicker">1 · Compliance — the code</p>
           <div class="codecols">
@@ -231,19 +244,7 @@ compliance_table &lt;- function(runs) runs |>
             Gemma's small dip is a few transient API timeouts, not format failures.</p>
         </section>
 
-        <!-- 10 — ACCURACY concept -->
-        <section data-background-color="#ffffff">
-          <p class="uc-kicker">2 · Accuracy</p>
-          <h2>Is it close to the human reference?</h2>
-          <ul class="tight">
-            <li><b>Exact match</b> of the predicted label to the human gold standard label.</li>
-            <li>Reported per model × prompt; add macro <b>precision / recall / F1</b> for imbalanced classes.</li>
-            <li>Differences between prompts (or models) are confirmed with <b>McNemar's test</b>, not eyeballed.</li>
-          </ul>
-          <p class="note">Accuracy here means closeness to the reference. Distinct from <i>precision-the-criterion</i>, which is about consistency.</p>
-        </section>
-
-        <!-- 11 — ACCURACY code -->
+        <!-- ACCURACY code -->
         <section data-background-color="#ffffff">
           <p class="uc-kicker">2 · Accuracy — the code</p>
           <div class="codecols">
@@ -336,20 +337,7 @@ binom.test(tab["1","0"],
             on this task, model choice doesn't move accuracy. (The prompt does — that's the matrix.)</p>
         </section>
 
-        <!-- 12 — PRECISION concept -->
-        <section data-background-color="#ffffff">
-          <p class="uc-kicker">3 · Precision</p>
-          <h2>Does it say the same thing twice?</h2>
-          <ul class="tight">
-            <li>Run the <b>same prompt on the same bio 5×</b> and measure consistency.</li>
-            <li><b>Agreement rate</b> — share of items where all runs agree.</li>
-            <li><b>Krippendorff's α (nominal)</b> — chance-corrected reliability across iterations.</li>
-            <li>Low precision undermines any single run, even an accurate one.</li>
-          </ul>
-          <p class="note">Temperature 0 should be steadier than temperature 1 — the design lets us see it.</p>
-        </section>
-
-        <!-- 13 — PRECISION code -->
+        <!-- PRECISION code -->
         <section data-background-color="#ffffff">
           <p class="uc-kicker">3 · Precision — the code</p>
           <div class="codecols">
@@ -393,13 +381,13 @@ precision_table &lt;- function(runs) runs |>
         <!-- COMPARE · Prompt -->
         <section data-background-color="#ffffff">
           <p class="uc-kicker">Comparison · Prompt</p>
-          <h2>Detailed vs bare prompt</h2>
+          <h2>Full vs simple prompt</h2>
           <table class="matrix">
             <tr><th>Prompt</th><th>Compliance</th><th>Accuracy</th><th>Agreement</th><th>&alpha;</th></tr>
-            <tr><td>Reform (detailed)</td><td>100%</td><td><b>83.1%</b></td><td>97.4%</td><td>0.97</td></tr>
-            <tr><td>Org (simple)</td><td>100%</td><td>72.3%</td><td>87.2%</td><td>0.92</td></tr>
+            <tr><td>Full</td><td>100%</td><td><b>83.1%</b></td><td>97.4%</td><td>0.97</td></tr>
+            <tr><td>Simple</td><td>100%</td><td>72.3%</td><td>87.2%</td><td>0.92</td></tr>
           </table>
-          <p class="note"><b>McNemar (accuracy): p = 0.002 — significant.</b> The detailed prompt is meaningfully more
+          <p class="note"><b>McNemar (accuracy): p = 0.002 — significant.</b> The full prompt is meaningfully more
             accurate (+11 pts) and more consistent. Qwen 3.6 · temp 0 · structured · 39 bios &times; 5.</p>
         </section>
 
@@ -427,16 +415,6 @@ precision_table &lt;- function(runs) runs |>
           </table>
           <p class="note"><b>McNemar (accuracy): p = 1.000 — not significant.</b> With the strong reform prompt Qwen is
             already reliable, so structure adds little here — its payoff is larger with weak prompts. Qwen 3.6 · reform · temp 0 · 39 bios &times; 5.</p>
-        </section>
-
-        <!-- CLOSE -->
-        <section class="divider" data-background-color="#ffffff">
-          <p class="uc-kicker">Use Case 3</p>
-          <h2>One task, fully evaluated</h2>
-          <p class="lead">Two temperatures, two prompts, structured vs not —
-            scored on compliance, accuracy, and precision, in Python <i>and</i> R.</p>
-          <p class="note">Script: <code>use_case_3_classification.py</code> · R suite: <code>evaluation_code.md</code></p>
-          <p><a class="uc-colab" href="https://colab.research.google.com/github/mro0001/pmrc-genai-workshop/blob/main/use-case-3/use_case_3_classification_R_colab.ipynb">&#9658;&nbsp; Try it yourself — R notebook in Colab</a></p>
         </section>
 
       </div>
